@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProDash – Project Launch Board</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/theme.js"></script>
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="/" id="nav-brand">ProDash</a>
+    <div class="nav-links">
+      <button id="btn-theme" class="btn btn-ghost btn-sm">☀️ Light</button>
+      <a href="/status.html">Status</a>
+      <a href="/admin.html">Admin</a>
+    </div>
+  </nav>
+
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Projects</span>
+        <button class="btn btn-primary btn-sm" id="btn-new-project">+ New</button>
+      </div>
+      <div class="sidebar-search-wrap">
+        <input id="sidebar-search" type="search" placeholder="Filter projects..." />
+      </div>
+      <ul class="sidebar-list" id="sidebar-list"></ul>
+    </aside>
+    <div class="main-pane" id="main-pane"></div>
+  </div>
+
+  <!-- New Project Modal -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>New Project</h2>
+        <button class="btn btn-ghost" id="btn-close-modal" style="font-size:18px;padding:2px 8px;">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="new-name">Project Name *</label>
+          <input type="text" id="new-name" placeholder="Enter project name" />
+        </div>
+        <div class="form-row">
+          <div class="form-group mb-0">
+            <label for="new-status">Status</label>
+            <select id="new-status"></select>
+          </div>
+          <div class="form-group mb-0">
+            <label for="new-division">Division</label>
+            <select id="new-division"></select>
+          </div>
+          <div class="form-group mb-0">
+            <label for="new-loe">Level of Effort</label>
+            <select id="new-loe"></select>
+          </div>
+        </div>
+        <div class="form-row mt-12">
+          <div class="form-group mb-0">
+            <label for="new-pm">Project Manager</label>
+            <input type="text" id="new-pm" placeholder="Name" />
+          </div>
+          <div class="form-group mb-0">
+            <label for="new-start">Start Date</label>
+            <input type="date" id="new-start" />
+          </div>
+          <div class="form-group mb-0">
+            <label for="new-end">End Date</label>
+            <input type="date" id="new-end" />
+          </div>
+        </div>
+        <div class="form-group mt-12">
+          <label for="new-team">Team (comma-separated)</label>
+          <input type="text" id="new-team" placeholder="Alice, Bob, Carol" />
+        </div>
+        <div class="form-group" id="new-funding-group">
+          <label>Funding Source(s)</label>
+          <div id="new-funding-checkboxes" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btn-cancel-modal">Cancel</button>
+        <button class="btn btn-primary" id="btn-create-project">Create Project</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <input type="file" id="csv-import-input" accept=".csv" style="display:none" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+</html>

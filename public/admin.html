@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProDash – Administration</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/theme.js"></script>
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="/">ProDash</a>
+    <div class="nav-links">
+      <button id="btn-theme" class="btn btn-ghost btn-sm">☀️ Light</button>
+      <a href="/">Projects</a>
+      <a href="/status.html">Status</a>
+      <a href="/admin.html" class="active">Admin</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Administration</h1>
+    </div>
+
+    <div class="admin-grid" id="admin-grid">
+      <!-- Dynamically populated -->
+    </div>
+
+    <!-- Display Settings Section -->
+    <div class="section" style="margin-top:24px;">
+      <div class="section-header">
+        <h2>Display Settings</h2>
+      </div>
+      <div class="section-body">
+        <div id="display-settings"></div>
+      </div>
+    </div>
+
+    <!-- Custom Fields Section -->
+    <div class="section" style="margin-top:24px;">
+      <div class="section-header">
+        <h2>Custom Field Definitions</h2>
+      </div>
+      <div class="section-body">
+        <p style="color:var(--gray-600);font-size:13px;margin-bottom:16px;">
+          Define custom fields that appear on project pages. Fields marked <strong>Show in List</strong> also appear as columns on the main launch board.
+        </p>
+
+        <div id="custom-fields-list" style="margin-bottom:20px;"></div>
+
+        <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px;background:var(--gray-50);">
+          <div style="font-size:12px;font-weight:700;color:var(--gray-600);text-transform:uppercase;letter-spacing:.04em;margin-bottom:12px;">Add Custom Field</div>
+          <div class="form-row">
+            <div class="form-group mb-0">
+              <label for="cf-label">Field Label *</label>
+              <input type="text" id="cf-label" placeholder="e.g. Priority, Region" />
+            </div>
+            <div class="form-group mb-0">
+              <label for="cf-name">Field Key *</label>
+              <input type="text" id="cf-name" placeholder="e.g. priority, region" />
+            </div>
+            <div class="form-group mb-0">
+              <label for="cf-type">Field Type</label>
+              <select id="cf-type">
+                <option value="text">Text</option>
+                <option value="select">Select (dropdown)</option>
+                <option value="date">Date</option>
+                <option value="number">Number</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group mt-12" id="cf-options-group" style="display:none;">
+            <label for="cf-options">Options (comma-separated)</label>
+            <input type="text" id="cf-options" placeholder="Option A, Option B, Option C" />
+          </div>
+          <div style="display:flex;align-items:center;gap:16px;margin-top:12px;">
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:13px;text-transform:none;letter-spacing:0;font-weight:500;">
+              <input type="checkbox" id="cf-show-in-list" style="width:auto;" />
+              Show as column in main project list
+            </label>
+            <button class="btn btn-primary" id="btn-add-custom-field">Add Field</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

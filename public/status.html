@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProDash – Status</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/theme.js"></script>
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="/">ProDash</a>
+    <div class="nav-links">
+      <button id="btn-theme" class="btn btn-ghost btn-sm">☀️ Light</button>
+      <a href="/">Projects</a>
+      <a href="/status.html" class="active">Status</a>
+      <a href="/admin.html">Admin</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="page-header">
+      <h1>Project Status</h1>
+    </div>
+
+    <!-- Summary stat cards -->
+    <div class="stat-cards" id="stat-cards"></div>
+
+    <!-- Row 1: Status (doughnut) + Division (bar) -->
+    <div class="status-charts-grid">
+      <div class="card">
+        <div class="section-header"><h2>By Status</h2></div>
+        <div class="section-body chart-body">
+          <canvas id="chart-status"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-header"><h2>By Division</h2></div>
+        <div class="section-body chart-body" id="wrap-division">
+          <canvas id="chart-division"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Project Manager (full width horizontal bar) -->
+    <div class="card" style="margin-top:24px;">
+      <div class="section-header"><h2>By Project Manager</h2></div>
+      <div class="section-body chart-body" id="wrap-pm">
+        <canvas id="chart-pm"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="/js/status.js"></script>
+</body>
+</html>

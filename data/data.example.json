@@ -1,0 +1,14 @@
+{
+  "projects": [],
+  "settings": {
+    "statusOptions": ["Planning", "Active", "On Hold", "Completed", "Cancelled", "Not Started"],
+    "divisionOptions": ["Infra", "Apps", "CMS", "Ops", "GS", "HR", "Admin"],
+    "fundingSourceOptions": ["General Budget", "Grant", "External Funding"],
+    "levelOfEffortOptions": ["Low", "Medium", "High", "Critical"],
+    "costCategories": ["Labor", "Materials", "Software", "Travel", "Overhead", "Other"],
+    "customFieldDefinitions": [],
+    "sidebarSort": "name",
+    "boardSortColumn": "",
+    "boardSortDir": "asc"
+  }
+}

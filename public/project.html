@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProDash – Project</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script src="/js/theme.js"></script>
+</head>
+<body>
+  <nav>
+    <a class="nav-brand" href="/">ProDash</a>
+    <div class="project-nav-bar">
+      <a href="/" class="nav-back" style="margin-left:16px;">&#8592; All Projects</a>
+      <div class="project-nav-actions">
+        <button id="btn-theme" class="btn btn-ghost btn-sm">☀️ Light</button>
+        <button class="gear-btn" id="btn-edit-toggle" title="Edit project">
+          &#9881; Edit
+        </button>
+        <button class="btn btn-danger btn-sm hidden" id="btn-delete-project">Delete Project</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container" id="project-container">
+    <div class="empty-state" style="margin-top:60px;">
+      <div class="empty-icon">⏳</div>
+      <p>Loading project...</p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script src="/js/project.js"></script>
+</body>
+</html>
