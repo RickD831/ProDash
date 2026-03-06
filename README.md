@@ -76,7 +76,7 @@ DB_PASSWORD=your_postgres_password
 ENTRA_CLIENT_ID=your-azure-app-client-id
 ENTRA_CLIENT_SECRET=your-azure-app-client-secret
 ENTRA_TENANT_ID=your-azure-tenant-id
-ENTRA_REDIRECT_URI=http://localhost:3000/auth/callback
+ENTRA_REDIRECT_URI=https://your-hostname:3000/auth/callback
 
 SESSION_SECRET=a-long-random-string
 
@@ -88,31 +88,62 @@ ADMIN_EMAILS=you@yourdomain.com
 
 1. Go to **portal.azure.com** → Entra ID → **App registrations** → **New registration**
 2. Name: `ProDash`, Supported account types: **Accounts in this org only**
-3. Redirect URI: **Web** → `http://localhost:3000/auth/callback`
+3. Redirect URI: **Web** → `https://your-hostname:3000/auth/callback`
 4. After creation, copy **Application (client) ID** → `ENTRA_CLIENT_ID`
 5. Copy **Directory (tenant) ID** → `ENTRA_TENANT_ID`
 6. Go to **Certificates & secrets** → **New client secret** → copy the **Value** → `ENTRA_CLIENT_SECRET`
 
-### 4. Create the PostgreSQL database and schema
+### 4. Generate a TLS certificate
+
+ProDash runs over HTTPS. For internal/dev use, a self-signed cert works fine.
+
+**On Windows (PowerShell as Administrator):**
+```powershell
+# Generate cert and store it
+New-SelfSignedCertificate `
+  -DnsName "your-hostname" `
+  -CertStoreLocation "cert:\LocalMachine\My" `
+  -FriendlyName "ProDash" `
+  -NotAfter (Get-Date).AddYears(5)
+
+# Export to PFX
+$cert = Get-ChildItem cert:\LocalMachine\My | Where-Object { $_.FriendlyName -eq "ProDash" }
+Export-PfxCertificate -Cert $cert -FilePath "cert.pfx" `
+  -Password (ConvertTo-SecureString -String "certpass" -Force -AsPlainText)
+
+# Create cert folder and convert to PEM (requires OpenSSL)
+mkdir cert
+openssl pkcs12 -in cert.pfx -nocerts -noenc -out cert\key.pem -passin pass:certpass
+openssl pkcs12 -in cert.pfx -clcerts -nokeys -out cert\cert.pem -passin pass:certpass
+```
+
+To avoid browser warnings, import `cert\cert.pem` into the trusted root store on each client machine:
+```powershell
+Import-Certificate -FilePath "cert\cert.pem" -CertStoreLocation "cert:\LocalMachine\Root"
+```
+
+> The `cert/` folder is gitignored — your private key is never committed.
+
+### 5. Create the PostgreSQL database and schema
 
 ```bash
 psql -U postgres -c "CREATE DATABASE prodash;"
 psql -U postgres -d prodash -f db/schema.sql
 ```
 
-### 5. Migrate existing data (if upgrading from the JSON version)
+### 6. Migrate existing data (if upgrading from the JSON version)
 
 ```bash
 node db/migrate.js
 ```
 
-### 6. Start the server
+### 7. Start the server
 
 ```bash
 npm start
 ```
 
-Open **http://localhost:3000** — you'll be redirected to the Microsoft login page.
+Open **https://your-hostname:3000** — you'll be redirected to the Microsoft login page.
 
 For auto-reload during development:
 ```bash
@@ -150,6 +181,7 @@ ProDash/
 ├── data/
 │   └── data.json         # Legacy JSON data (used only by migrate.js)
 ├── server.js             # Express entry point (port 3000)
+├── cert/                 # TLS cert + key — never committed
 ├── .env                  # Secrets — never committed
 ├── .env.example          # Template with blank values
 ├── package.json

@@ -1,14 +1,20 @@
 require('dotenv').config();
-const express  = require('express');
-const path     = require('path');
-const session  = require('express-session');
-const PgSession = require('connect-pg-simple')(session);
-const pool     = require('./db');
-
-const requireAuth  = require('./middleware/requireAuth');
+const express    = require('express');
+const https      = require('https');
+const fs         = require('fs');
+const path       = require('path');
+const session    = require('express-session');
+const PgSession  = require('connect-pg-simple')(session);
+const pool       = require('./db');
+const requireAuth = require('./middleware/requireAuth');
 
 const app  = express();
 const PORT = process.env.PORT || 3000;
+
+const sslOptions = {
+  key:  fs.readFileSync(path.join(__dirname, 'cert/key.pem')),
+  cert: fs.readFileSync(path.join(__dirname, 'cert/cert.pem'))
+};
 
 app.use(express.json());
 
@@ -18,7 +24,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'dev-secret-change-me',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
+  cookie: { secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days; secure:true required for HTTPS
 }));
 
 // Auth routes — no authentication required
@@ -37,6 +43,6 @@ app.get('/api/me', (req, res) => res.json(req.session.user));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/admin',    require('./routes/admin'));
 
-app.listen(PORT, () => {
-  console.log(`ProDash running at http://localhost:${PORT}`);
+https.createServer(sslOptions, app).listen(PORT, () => {
+  console.log(`ProDash running at https://rick:${PORT}`);
 });
