@@ -3,6 +3,7 @@ const express    = require('express');
 const https      = require('https');
 const fs         = require('fs');
 const path       = require('path');
+const helmet     = require('helmet');
 const session    = require('express-session');
 const PgSession  = require('connect-pg-simple')(session);
 const pool       = require('./db');
@@ -16,6 +17,9 @@ const sslOptions = {
   cert: fs.readFileSync(path.join(__dirname, 'cert/cert.pem'))
 };
 
+// Security headers
+app.use(helmet());
+
 app.use(express.json());
 
 // Session store backed by PostgreSQL
@@ -24,7 +28,12 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'dev-secret-change-me',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: true, maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days; secure:true required for HTTPS
+  cookie: {
+    secure: true,               // HTTPS only
+    httpOnly: true,             // not readable by JS
+    sameSite: 'lax',            // CSRF protection
+    maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+  }
 }));
 
 // Auth routes — no authentication required
