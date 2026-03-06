@@ -21,15 +21,31 @@ let tlDragState = null;
 let tlFilters = {};
 let tlSort = { col: null, dir: 'asc' };
 let tlFilterBarOpen = false;
+let currentUser = null;
 
 /* ---- Init ---- */
 async function init() {
+  const me = await fetch('/api/me').then(r => r.ok ? r.json() : null);
+  if (!me) { window.location = '/auth/login'; return; }
+  currentUser = me;
+  const navUser = document.getElementById('nav-user');
+  if (navUser) navUser.textContent = me.name;
+
   [settings, projects] = await Promise.all([
     fetch('/api/admin/settings').then(r => r.json()),
     fetch('/api/projects').then(r => r.json())
   ]);
   sortColumn = settings.boardSortColumn || null;
   sortDir    = settings.boardSortDir    || 'asc';
+
+  // Hide admin controls for readers
+  if (me.role !== 'admin') {
+    const btnNew = document.getElementById('btn-new-project');
+    if (btnNew) btnNew.style.display = 'none';
+    const btnImport = document.getElementById('btn-import-csv');
+    if (btnImport) btnImport.style.display = 'none';
+  }
+
   populateNewProjectForm();
   renderSidebar();
   renderLaunchBoard();
@@ -1064,7 +1080,13 @@ function attachProjectListeners() {
   renderLinks();
   renderMilestones();
 
-  document.getElementById('btn-edit-toggle').addEventListener('click', () => setEditMode(!editMode));
+  const editToggle = document.getElementById('btn-edit-toggle');
+  if (currentUser && currentUser.role !== 'admin') {
+    if (editToggle) editToggle.style.display = 'none';
+  } else {
+    if (editToggle) editToggle.addEventListener('click', () => setEditMode(!editMode));
+  }
+
   document.getElementById('btn-delete-project').addEventListener('click', deleteProject);
   document.getElementById('btn-save-fields').addEventListener('click', saveFields);
   document.getElementById('btn-cancel-fields').addEventListener('click', () => setEditMode(false));

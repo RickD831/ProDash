@@ -9,12 +9,19 @@ let project = null;
 let settings = null;
 let editMode = false;
 let editingMilestoneId = null;
+let currentUser = null;
 
 if (!PROJECT_ID) {
   window.location.href = '/';
 }
 
 async function init() {
+  const me = await fetch('/api/me').then(r => r.ok ? r.json() : null);
+  if (!me) { window.location = '/auth/login'; return; }
+  currentUser = me;
+  const navUser = document.getElementById('nav-user');
+  if (navUser) navUser.textContent = me.name;
+
   [project, settings] = await Promise.all([
     fetch(`/api/projects/${PROJECT_ID}`).then(r => {
       if (!r.ok) throw new Error('Not found');
@@ -26,6 +33,13 @@ async function init() {
   });
 
   document.title = `ProDash – ${project.name}`;
+
+  // Hide edit controls for readers
+  if (me.role !== 'admin') {
+    const editBtn = document.getElementById('btn-edit-toggle');
+    if (editBtn) editBtn.style.display = 'none';
+  }
+
   renderAll();
 }
 

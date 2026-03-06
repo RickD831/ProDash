@@ -13,6 +13,11 @@ const SETTINGS_CONFIG = [
 ];
 
 async function init() {
+  const me = await fetch('/api/me').then(r => r.ok ? r.json() : null);
+  if (!me || me.role !== 'admin') { window.location = '/'; return; }
+  const navUser = document.getElementById('nav-user');
+  if (navUser) navUser.textContent = me.name;
+
   settings = await fetch('/api/admin/settings').then(r => r.json());
   renderOptionCards();
   renderDisplaySettings();
